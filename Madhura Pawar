@@ -1,0 +1,270 @@
+/*AND*/
+module and_gate (
+    input a,
+    input b,
+    output y
+);
+    assign y = a & b;
+endmodule
+
+/*OR*/
+module or_gate (
+    input a,
+    input b,
+    output y
+);
+    assign y = a | b;
+endmodule
+
+/*Half-Adder*/
+module half_adder (
+    input a,
+    input b,
+    output sum,
+    output carry
+);
+    assign sum = a ^ b;
+    assign carry = a & b;
+endmodule
+
+/*4 to 1 Multiplexer*/
+module mux_4to1 (
+    input [1:0] sel,
+    input [3:0] d,
+    output y
+);
+    assign y = (sel == 2'b00) ? d[0] :
+               (sel == 2'b01) ? d[1] :
+               (sel == 2'b10) ? d[2] :
+               d[3];
+endmodule
+
+/*Testbenches & Simulation*/
+/*AND*/
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Entity declaration for the AND gate
+entity and_gate is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           y : out STD_LOGIC);
+end and_gate;
+
+-- Architecture for the AND gate
+architecture Behavioral of and_gate is
+begin
+    y <= a and b;
+end Behavioral;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Testbench entity declaration
+entity and_gate_tb is
+end and_gate_tb;
+
+-- Testbench architecture
+architecture Behavioral of and_gate_tb is
+    signal a : STD_LOGIC := '0';
+    signal b : STD_LOGIC := '0';
+    signal y : STD_LOGIC;
+begin
+    -- Instantiate the AND gate
+    uut: entity work.and_gate
+        Port map (
+            a => a,
+            b => b,
+            y => y
+        );
+
+    -- Stimulus process
+    stimulus: process
+    begin
+        -- Apply test vectors
+        a <= '0'; b <= '0'; wait for 10 ns;
+        a <= '0'; b <= '1'; wait for 10 ns;
+        a <= '1'; b <= '0'; wait for 10 ns;
+        a <= '1'; b <= '1'; wait for 10 ns;
+
+        -- End simulation
+        wait;
+    end process;
+
+    -- Monitor process
+    monitor: process
+    begin
+        wait for 1 ns; -- Delay to ensure monitoring starts after initialization
+        report "Time: " & time'image(now) & " | a: " & std_logic'image(a) & " | b: " & std_logic'image(b) & " | y: " & std_logic'image(y);
+        wait for 9 ns; -- Delay for each clock cycle
+        report "Time: " & time'image(now) & " | a: " & std_logic'image(a) & " | b: " & std_logic'image(b) & " | y: " & std_logic'image(y);
+        wait for 9 ns;
+        report "Time: " & time'image(now) & " | a: " & std_logic'image(a) & " | b: " & std_logic'image(b) & " | y: " & std_logic'image(y);
+        wait for 9 ns;
+        report "Time: " & time'image(now) & " | a: " & std_logic'image(a) & " | b: " & std_logic'image(b) & " | y: " & std_logic'image(y);
+        wait;
+    end process;
+end Behavioral;
+
+/*Half-Adder*/
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Entity declaration for the Half Adder
+entity half_adder is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           sum : out STD_LOGIC;
+           carry : out STD_LOGIC);
+end half_adder;
+
+-- Architecture for the Half Adder
+architecture Behavioral of half_adder is
+begin
+    sum <= a XOR b;
+    carry <= a AND b;
+end Behavioral;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Testbench entity declaration
+entity half_adder_tb is
+end half_adder_tb;
+
+-- Testbench architecture
+architecture Behavioral of half_adder_tb is
+    signal a : STD_LOGIC := '0';
+    signal b : STD_LOGIC := '0';
+    signal sum : STD_LOGIC;
+    signal carry : STD_LOGIC;
+begin
+    -- Instantiate the Half Adder
+    uut: entity work.half_adder
+        Port map (
+            a => a,
+            b => b,
+            sum => sum,
+            carry => carry
+        );
+
+    -- Stimulus process
+    stimulus: process
+    begin
+        -- Apply test vectors
+        a <= '0'; b <= '0'; wait for 10 ns;
+        a <= '0'; b <= '1'; wait for 10 ns;
+        a <= '1'; b <= '0'; wait for 10 ns;
+        a <= '1'; b <= '1'; wait for 10 ns;
+
+        -- End simulation
+        wait;
+    end process;
+
+    -- Monitor process
+    monitor: process
+    begin
+        wait for 1 ns; -- Delay to ensure monitoring starts after initialization
+        report "Time: " & time'image(now) & " | a: " & std_logic'image(a) & " | b: " & std_logic'image(b) & " | sum: " & std_logic'image(sum) & " | carry: " & std_logic'image(carry);
+        wait for 9 ns; -- Delay for each clock cycle
+        report "Time: " & time'image(now) & " | a: " & std_logic'image(a) & " | b: " & std_logic'image(b) & " | sum: " & std_logic'image(sum) & " | carry: " & std_logic'image(carry);
+        wait for 9 ns;
+        report "Time: " & time'image(now) & " | a: " & std_logic'image(a) & " | b: " & std_logic'image(b) & " | sum: " & std_logic'image(sum) & " | carry: " & std_logic'image(carry);
+        wait for 9 ns;
+        report "Time: " & time'image(now) & " | a: " & std_logic'image(a) & " | b: " & std_logic'image(b) & " | sum: " & std_logic'image(sum) & " | carry: " & std_logic'image(carry);
+        wait;
+    end process;
+end Behavioral;
+
+/*4 to 1 MUX*/
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Entity declaration for the 4-to-1 Multiplexer
+entity mux_4to1 is
+    Port ( sel : in STD_LOGIC_VECTOR (1 downto 0);
+           d : in STD_LOGIC_VECTOR (3 downto 0);
+           y : out STD_LOGIC);
+end mux_4to1;
+
+-- Architecture for the 4-to-1 Multiplexer
+architecture Behavioral of mux_4to1 is
+begin
+    process(sel, d)
+    begin
+        case sel is
+            when "00" => y <= d(0);
+            when "01" => y <= d(1);
+            when "10" => y <= d(2);
+            when "11" => y <= d(3);
+            when others => y <= '0';
+        end case;
+    end process;
+end Behavioral;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Testbench entity declaration
+entity mux_4to1_tb is
+end mux_4to1_tb;
+
+-- Testbench architecture
+architecture Behavioral of mux_4to1_tb is
+    signal sel : STD_LOGIC_VECTOR (1 downto 0) := "00";
+    signal d : STD_LOGIC_VECTOR (3 downto 0) := "0000";
+    signal y : STD_LOGIC;
+begin
+    -- Instantiate the 4-to-1 Multiplexer
+    uut: entity work.mux_4to1
+        Port map (
+            sel => sel,
+            d => d,
+            y => y
+        );
+
+    -- Stimulus process
+    stimulus: process
+    begin
+        -- Apply test vectors
+        sel <= "00"; d <= "0001"; wait for 10 ns;
+        sel <= "01"; d <= "0010"; wait for 10 ns;
+        sel <= "10"; d <= "0100"; wait for 10 ns;
+        sel <= "11"; d <= "1000"; wait for 10 ns;
+
+        -- End simulation
+        wait;
+    end process;
+
+    -- Monitor process
+    monitor: process
+    begin
+        wait for 1 ns; -- Delay to ensure monitoring starts after initialization
+        report "Time: " & time'image(now) & " | sel: " & sel & " | d: " & d & " | y: " & std_logic'image(y);
+        wait for 9 ns; -- Delay for each clock cycle
+        report "Time: " & time'image(now) & " | sel: " & sel & " | d: " & d & " | y: " & std_logic'image(y);
+        wait for 9 ns;
+        report "Time: " & time'image(now) & " | sel: " & sel & " | d: " & d & " | y: " & std_logic'image(y);
+        wait for 9 ns;
+        report "Time: " & time'image(now) & " | sel: " & sel & " | d: " & d & " | y: " & std_logic'image(y);
+        wait;
+    end process;
+end Behavioral;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
